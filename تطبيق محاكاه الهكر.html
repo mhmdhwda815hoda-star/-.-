@@ -1,0 +1,837 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>محاكاة التوعية من الاختراق</title>
+    <!-- مكتبة الأيقونات -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: #0c1317;
+            height: 100vh;
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        /* --- 0. شاشة البداية (Home Screen) --- */
+        #welcome-screen {
+            width: 100%;
+            max-width: 450px;
+            height: 100vh;
+            background: linear-gradient(180deg, #0b141a 0%, #070d10 100%);
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            align-items: center;
+            padding: 30px 20px;
+            text-align: center;
+            color: #e9edef;
+            box-shadow: 0 0 20px rgba(0,0,0,0.8);
+            position: relative;
+        }
+
+        .welcome-header {
+            margin-top: 10px;
+        }
+
+        .welcome-icon {
+            font-size: 3rem;
+            color: #00a884;
+            margin-bottom: 10px;
+            text-shadow: 0 0 15px rgba(0, 168, 132, 0.4);
+        }
+
+        .warning-text-card {
+            background-color: #111b21;
+            border: 1px solid #222d34;
+            border-right: 4px solid #00a884;
+            padding: 18px;
+            border-radius: 12px;
+            font-size: 0.95rem;
+            line-height: 1.7;
+            color: #d1d7db;
+            margin: 15px 0;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+        }
+
+        .btn-group {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .btn-main {
+            background: linear-gradient(135deg, #00a884, #008f6f);
+            color: #fff;
+            border: none;
+            padding: 14px;
+            border-radius: 30px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(0, 168, 132, 0.3);
+            transition: transform 0.2s;
+            outline: none;
+        }
+
+        .btn-main:active {
+            transform: scale(0.96);
+        }
+
+        .btn-secondary {
+            background-color: #202c33;
+            color: #e9edef;
+            border: 1px solid #3b4a54;
+            padding: 12px;
+            border-radius: 30px;
+            font-size: 0.95rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s;
+            outline: none;
+        }
+
+        .btn-secondary:active {
+            transform: scale(0.96);
+        }
+
+        .app-version {
+            font-size: 0.85rem;
+            color: #8696a0;
+            margin-top: 15px;
+            padding-bottom: 5px;
+            font-weight: bold;
+        }
+
+        /* --- 0.1. صفحة المطور الكاملة --- */
+        #developer-screen {
+            display: none;
+            width: 100%;
+            max-width: 450px;
+            height: 100vh;
+            background: linear-gradient(180deg, #111b21 0%, #0b141a 100%);
+            flex-direction: column;
+            justify-content: space-between;
+            align-items: center;
+            padding: 40px 20px;
+            text-align: center;
+            color: #e9edef;
+            box-shadow: 0 0 20px rgba(0,0,0,0.8);
+            position: relative;
+        }
+
+        .dev-header-icon {
+            font-size: 4rem;
+            color: #00ff66;
+            margin-bottom: 15px;
+            text-shadow: 0 0 20px rgba(0, 255, 102, 0.4);
+        }
+
+        .dev-full-card {
+            background-color: #182229;
+            border: 2px solid #00ff66;
+            border-radius: 16px;
+            padding: 25px 20px;
+            width: 100%;
+            box-shadow: 0 0 20px rgba(0, 255, 102, 0.2);
+        }
+
+        .dev-name {
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: #fff;
+            margin-top: 10px;
+            margin-bottom: 20px;
+        }
+
+        .social-links-vertical {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            width: 100%;
+        }
+
+        .social-btn-large {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            padding: 14px;
+            border-radius: 25px;
+            text-decoration: none;
+            font-size: 1rem;
+            font-weight: bold;
+            color: #fff;
+            transition: transform 0.2s;
+        }
+
+        .social-btn-large:active {
+            transform: scale(0.95);
+        }
+
+        .whatsapp-bg {
+            background-color: #25D366;
+        }
+
+        .tiktok-bg {
+            background-color: #000;
+            border: 1px solid #fe2c55;
+        }
+
+        /* --- 1. واجهة الواتساب --- */
+        #whatsapp-screen {
+            display: none;
+            width: 100%;
+            max-width: 450px;
+            height: 100vh;
+            background-color: #0b141a;
+            flex-direction: column;
+            position: relative;
+            box-shadow: 0 0 20px rgba(0,0,0,0.8);
+        }
+
+        .chat-header {
+            background-color: #202c33;
+            color: #e9edef;
+            padding: 10px 15px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-bottom: 1px solid #222d34;
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .avatar {
+            width: 38px;
+            height: 38px;
+            border-radius: 50%;
+            background-color: #111b21;
+            border: 1px solid #00ff66;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.1rem;
+        }
+
+        .user-info .name {
+            font-weight: 600;
+            font-size: 1rem;
+            color: #e9edef;
+        }
+
+        .header-icons {
+            display: flex;
+            gap: 18px;
+            color: #aebac1;
+            font-size: 1.1rem;
+        }
+
+        .chat-body {
+            flex: 1;
+            padding: 12px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            background-image: radial-gradient(#182229 1px, transparent 0);
+            background-size: 12px 12px;
+        }
+
+        .system-badge {
+            background-color: #182229;
+            color: #8696a0;
+            font-size: 0.72rem;
+            padding: 6px 12px;
+            border-radius: 8px;
+            text-align: center;
+            margin: 4px auto;
+            max-width: 90%;
+        }
+
+        .encrypted-badge {
+            background-color: #182229;
+            color: #ffd279;
+            font-size: 0.73rem;
+            padding: 8px 12px;
+            border-radius: 8px;
+            text-align: center;
+            margin: 6px auto;
+            max-width: 92%;
+            border: 1px solid rgba(255, 210, 121, 0.1);
+        }
+
+        .message {
+            max-width: 78%;
+            padding: 6px 10px;
+            border-radius: 8px;
+            font-size: 0.92rem;
+            line-height: 1.4;
+            position: relative;
+            word-wrap: break-word;
+            color: #e9edef;
+        }
+
+        .message.incoming {
+            background-color: #202c33;
+            align-self: flex-start;
+            border-top-right-radius: 0;
+        }
+
+        .message.outgoing {
+            background-color: #005c4b;
+            align-self: flex-end;
+            border-top-left-radius: 0;
+        }
+
+        .time {
+            font-size: 0.63rem;
+            color: #8696a0;
+            margin-top: 3px;
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            gap: 3px;
+        }
+
+        .outgoing .time {
+            color: #67b39e;
+        }
+
+        .clickable-link {
+            color: #53bdeb;
+            text-decoration: underline;
+            cursor: pointer;
+            word-break: break-all;
+            font-weight: 500;
+        }
+
+        .chat-input-bar {
+            background-color: #202c33;
+            padding: 8px 10px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .input-box {
+            flex: 1;
+            background-color: #2a3942;
+            border-radius: 20px;
+            padding: 8px 15px;
+            color: #8696a0;
+            font-size: 0.9rem;
+        }
+
+        .mic-btn {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: #00a884;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #111b21;
+        }
+
+        /* --- 2. أنيميشن فتح متصفح كروم --- */
+        #chrome-anim-screen {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background-color: #202124;
+            z-index: 500;
+            flex-direction: column;
+            animation: openChrome 0.5s cubic-bezier(0.1, 0.9, 0.2, 1) forwards;
+        }
+
+        @keyframes openChrome {
+            0% { transform: scale(0.2); opacity: 0; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+
+        .chrome-bar {
+            background-color: #292a2d;
+            padding: 12px 15px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            border-bottom: 1px solid #3c4043;
+        }
+
+        .chrome-url-box {
+            flex: 1;
+            background-color: #202124;
+            border-radius: 20px;
+            padding: 8px 16px;
+            color: #e8eaed;
+            font-size: 0.85rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            border: 1px solid #5f6368;
+            direction: ltr;
+        }
+
+        .chrome-body {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #00ff66;
+            font-family: monospace;
+            font-size: 1.2rem;
+        }
+
+        /* --- 3. شاشة الاختراق الماتريكس --- */
+        #hacker-screen {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background-color: #000;
+            font-family: 'Courier New', Courier, monospace;
+            z-index: 999;
+        }
+
+        canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+            opacity: 0.35;
+        }
+
+        .hacker-container {
+            position: relative;
+            z-index: 2;
+            text-align: center;
+            background: rgba(0, 15, 0, 0.92);
+            border: 2px solid #00ff66;
+            padding: 35px 20px;
+            border-radius: 15px;
+            box-shadow: 0 0 35px rgba(0, 255, 102, 0.4);
+            width: 90%;
+            max-width: 450px;
+            margin: auto;
+            top: 50%;
+            transform: translateY(-50%);
+        }
+
+        .trap-warning {
+            color: #ff3333;
+            font-size: 1.5rem;
+            font-weight: bold;
+            margin-bottom: 15px;
+            text-shadow: 0 0 12px #ff0000;
+            animation: pulse 1s infinite alternate;
+        }
+
+        @keyframes pulse {
+            from { opacity: 0.7; transform: scale(0.98); }
+            to { opacity: 1; transform: scale(1.02); }
+        }
+
+        .status-loading-text {
+            color: #00ff66;
+            font-size: 1.3rem;
+            margin-bottom: 15px;
+            font-weight: bold;
+        }
+
+        .progress-box {
+            width: 100%;
+            height: 24px;
+            border: 2px solid #00ff66;
+            border-radius: 12px;
+            padding: 2px;
+            margin: 10px 0 15px 0;
+            box-shadow: inset 0 0 10px rgba(0, 255, 102, 0.3);
+            background: rgba(0, 0, 0, 0.6);
+        }
+
+        .progress-bar {
+            width: 0%;
+            height: 100%;
+            background: linear-gradient(90deg, #004411, #00ff66);
+            border-radius: 10px;
+            transition: width 0.15s ease-out;
+            box-shadow: 0 0 12px #00ff66;
+        }
+
+        .percentage {
+            color: #00ff66;
+            font-size: 1.2rem;
+            font-weight: bold;
+            margin-bottom: 10px;
+            text-shadow: 0 0 8px #00ff66;
+        }
+
+        .prank-result {
+            display: none;
+            margin-top: 18px;
+            border-top: 1px dashed rgba(0, 255, 102, 0.4);
+            padding-top: 18px;
+            animation: fadeIn 0.8s ease-in-out;
+        }
+
+        .prank-text {
+            color: #00ff66;
+            font-size: 1.2rem;
+            line-height: 1.6;
+            text-shadow: 0 0 10px #00ff66;
+            font-weight: bold;
+        }
+
+        .warning-subtext {
+            color: #ff3333;
+            font-size: 1.1rem;
+            margin-top: 10px;
+            margin-bottom: 20px;
+            text-shadow: 0 0 8px #ff0000;
+        }
+
+        .btn-restart {
+            background: linear-gradient(135deg, #00ff66, #00b347);
+            color: #000;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 25px;
+            font-size: 1rem;
+            font-weight: bold;
+            cursor: pointer;
+            box-shadow: 0 0 15px rgba(0, 255, 102, 0.4);
+            transition: transform 0.2s, background 0.2s;
+            outline: none;
+            width: 100%;
+            margin-top: 10px;
+        }
+
+        .btn-restart:active {
+            transform: scale(0.95);
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- 0. شاشة البداية -->
+    <div id="welcome-screen">
+        <div class="welcome-header">
+            <div class="welcome-icon">🛡️</div>
+            <h2 style="color: #00a884; font-size: 1.3rem;">تطبيق محاكاة الاختراق</h2>
+        </div>
+
+        <div class="warning-text-card">
+            هذه محاكاة للتنبيه من أخطار الاختراق عبر الروابط المجهولة التي قد يرسلها الأشخاص، سواء أصدقاؤك أو أشخاص مجهولون.
+        </div>
+
+        <div class="btn-group">
+            <button id="btn-enter" class="btn-main">دخول للمحاكاة</button>
+            <button id="btn-dev" class="btn-secondary">عن صانع التطبيق</button>
+        </div>
+
+        <div class="app-version">
+            إصدار التطبيق 1.0 (2026)
+        </div>
+    </div>
+
+    <!-- 0.1. صفحة معلومات المطور الكاملة -->
+    <div id="developer-screen">
+        <div class="welcome-header">
+            <div class="dev-header-icon">💻</div>
+            <h2 style="color: #00ff66; font-size: 1.4rem;">عن صانع التطبيق</h2>
+        </div>
+
+        <div class="dev-full-card">
+            <div style="color: #8696a0; font-size: 0.9rem;">تم تطوير البرمجية بواسطة:</div>
+            <div class="dev-name">المطور / محمود محمد عبد الوهاب</div>
+            
+            <div class="social-links-vertical">
+                <a href="https://wa.me/201099675908" target="_blank" class="social-btn-large whatsapp-bg">
+                    <i class="fab fa-whatsapp"></i> التواصل عبر واتساب
+                </a>
+                <a href="https://tiktok.com/@pov_hoodaa" target="_blank" class="social-btn-large tiktok-bg">
+                    <i class="fab fa-tiktok"></i> المتابعة على تيك توك
+                </a>
+            </div>
+        </div>
+
+        <button id="btn-back-home" class="btn-secondary" style="width: 100%;">العودة للقائمة الرئيسية</button>
+    </div>
+
+    <!-- 1. واجهة محادثة الواتساب -->
+    <div id="whatsapp-screen">
+        <div class="chat-header">
+            <div class="header-left">
+                <span>➔</span>
+                <div class="avatar">🔱</div>
+                <div class="user-info">
+                    <div class="name">@pov_hooda</div>
+                </div>
+            </div>
+            <div class="header-icons">
+                <span>📹</span>
+                <span>📞</span>
+                <span>⋮</span>
+            </div>
+        </div>
+
+        <div class="chat-body">
+            <div class="system-badge">صلِّ على النبي ❤️</div>
+            <div class="system-badge">اليوم</div>
+
+            <div class="encrypted-badge">
+                🔒 الرسائل والمكالمات مشفرة تماماً بين الطرفين. ولا يمكن لأحد خارج هذه الدردشة قراءتها أو الاستماع إليها.
+            </div>
+
+            <div class="message incoming">
+                السلام عليكم
+                <div class="time">١٢:١٨ ص</div>
+            </div>
+
+            <div class="message outgoing">
+                وعليكم السلام
+                <div class="time">١٢:١٨ ص <span>✓✓</span></div>
+            </div>
+
+            <div class="message incoming">
+                عايز تشوف اللعبة المهكرة دي؟
+                <div class="time">١٢:١٩ ص</div>
+            </div>
+
+            <div class="message outgoing">
+                أنت مين الأول؟
+                <div class="time">١٢:١٩ ص <span>✓✓</span></div>
+            </div>
+
+            <div class="message incoming">
+                مش مهم
+                <div class="time">١٢:١٩ ص</div>
+            </div>
+
+            <div class="message incoming">
+                شوف اللعبة من هنا:
+                <div class="time">١٢:١٩ ص</div>
+            </div>
+
+            <div class="message incoming">
+                <span class="clickable-link" id="chat-link">https://game_hoda..........com</span>
+                <div class="time">١٢:٢٠ ص</div>
+            </div>
+
+            <div class="message outgoing">
+                طيب تمام
+                <div class="time">١٢:٢١ ص <span>✓</span></div>
+            </div>
+        </div>
+
+        <div class="chat-input-bar">
+            <div class="input-box">مراسلة</div>
+            <div class="mic-btn">🎙️</div>
+        </div>
+    </div>
+
+    <!-- 2. انميشن المتصفح -->
+    <div id="chrome-anim-screen">
+        <div class="chrome-bar">
+            <span style="color: #e8eaed; font-size: 1.2rem;">✕</span>
+            <div class="chrome-url-box">
+                🔒 https://game_hoda..........com
+            </div>
+            <span style="color: #e8eaed; font-size: 1.2rem;">⋮</span>
+        </div>
+        <div class="chrome-body">
+            جاري فتح الرابط والتوجيه...
+        </div>
+    </div>
+
+    <!-- 3. شاشة الاختراق الماتريكس -->
+    <div id="hacker-screen">
+        <canvas id="matrix"></canvas>
+
+        <div class="hacker-container">
+            <!-- رسالة الوقوع في الفخ -->
+            <div class="trap-warning" id="trap-text">🚨 لقد وقعت في الفخ! 🚨</div>
+
+            <div class="status-loading-text" id="status-title">يتم الآن اختراقك...</div>
+            
+            <div class="progress-box">
+                <div class="progress-bar" id="bar"></div>
+            </div>
+            
+            <div class="percentage" id="percent">0%</div>
+
+            <div class="prank-result" id="result-box">
+                <div class="prank-text">
+                    لا تقلق، نمزح معك فقط <br>
+                    لم يتم اختراقك حالياً 😈
+                </div>
+                <div class="warning-subtext">
+                    لكنه قريب.. جداً 😈
+                </div>
+                <button id="btn-restart" class="btn-restart">🔄 إعادة المحاكاة</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let matrixInterval = null;
+        let loadingInterval = null;
+
+        document.addEventListener('DOMContentLoaded', function() {
+            // زر الدخول للمحاكاة
+            document.getElementById('btn-enter').onclick = function() {
+                document.getElementById('welcome-screen').style.display = 'none';
+                document.getElementById('whatsapp-screen').style.display = 'flex';
+            };
+
+            // زر فتح صفحة المطور
+            document.getElementById('btn-dev').onclick = function() {
+                document.getElementById('welcome-screen').style.display = 'none';
+                document.getElementById('developer-screen').style.display = 'flex';
+            };
+
+            // زر العودة من صفحة المطور
+            document.getElementById('btn-back-home').onclick = function() {
+                document.getElementById('developer-screen').style.display = 'none';
+                document.getElementById('welcome-screen').style.display = 'flex';
+            };
+
+            // زر الضغط على الرابط في المحادثة
+            document.getElementById('chat-link').onclick = function() {
+                const chromeScreen = document.getElementById('chrome-anim-screen');
+                chromeScreen.style.display = 'flex';
+
+                setTimeout(() => {
+                    chromeScreen.style.display = 'none';
+                    document.getElementById('whatsapp-screen').style.display = 'none';
+                    document.getElementById('hacker-screen').style.display = 'block';
+
+                    startMatrixBackground();
+                    startSlowLoading();
+                }, 1200);
+            };
+
+            // زر إعادة المحاكاة من شاشة النهاية
+            document.getElementById('btn-restart').onclick = function() {
+                resetSimulation();
+            };
+        });
+
+        // إعادة تهيئة المحاكاة
+        function resetSimulation() {
+            // إيقاف المؤشرات الحالية
+            if (loadingInterval) clearInterval(loadingInterval);
+            if (matrixInterval) clearInterval(matrixInterval);
+
+            // إعادة تعيين الشاشات والعناصر
+            document.getElementById('hacker-screen').style.display = 'none';
+            document.getElementById('welcome-screen').style.display = 'flex';
+
+            document.getElementById('trap-text').style.display = 'block';
+            document.getElementById('status-title').textContent = 'يتم الآن اختراقك...';
+            document.getElementById('status-title').style.fontSize = '1.3rem';
+            document.getElementById('bar').style.width = '0%';
+            document.getElementById('percent').textContent = '0%';
+            document.getElementById('percent').style.display = 'block';
+            document.getElementById('result-box').style.display = 'none';
+        }
+
+        // تأثير الماتريكس
+        const canvas = document.getElementById('matrix');
+        const ctx = canvas.getContext('2d');
+
+        function startMatrixBackground() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+
+            const binaryChars = '01';
+            const fontSize = 16;
+            const columns = canvas.width / fontSize;
+            const drops = Array(Math.floor(columns)).fill(1);
+
+            function drawMatrix() {
+                ctx.fillStyle = 'rgba(0, 0, 0, 0.05)';
+                ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+                ctx.fillStyle = '#00ff66';
+                ctx.font = fontSize + 'px monospace';
+
+                for (let i = 0; i < drops.length; i++) {
+                    const text = binaryChars.charAt(Math.floor(Math.random() * binaryChars.length));
+                    ctx.fillText(text, i * fontSize, drops[i] * fontSize);
+
+                    if (drops[i] * fontSize > canvas.height && Math.random() > 0.975) {
+                        drops[i] = 0;
+                    }
+                    drops[i]++;
+                }
+            }
+
+            if (matrixInterval) clearInterval(matrixInterval);
+            matrixInterval = setInterval(drawMatrix, 33);
+        }
+
+        // شريط التحميل ومعالجة التحذير
+        function startSlowLoading() {
+            const statusTitle = document.getElementById('status-title');
+            const progressBar = document.getElementById('bar');
+            const percentText = document.getElementById('percent');
+            const resultBox = document.getElementById('result-box');
+            const trapText = document.getElementById('trap-text');
+
+            let progress = 0;
+
+            if (loadingInterval) clearInterval(loadingInterval);
+
+            loadingInterval = setInterval(() => {
+                progress += Math.floor(Math.random() * 2) + 1;
+
+                if (progress > 100) progress = 100;
+
+                progressBar.style.width = progress + '%';
+                percentText.textContent = progress + '%';
+
+                if (progress === 100) {
+                    clearInterval(loadingInterval);
+
+                    // إخفاء عبارة "لقد وقعت في الفخ" فور الانتهاء
+                    trapText.style.display = "none";
+
+                    statusTitle.textContent = "تم الاختراق بواسطة حودا";
+                    statusTitle.style.fontSize = "1.5rem";
+                    percentText.style.display = "none";
+                    resultBox.style.display = "block";
+                }
+            }, 160);
+        }
+    </script>
+</body>
+</html>
